@@ -93,10 +93,85 @@
                 button{
                     cursor: pointer;
                 }
+              .logo {
+               font-weight: bold;
+              }
+              .user{
+               display: flex;
+               gap:10px;
+              }
+              img{
+               background-color: #ddddf7;
+               width: 24px;
+               height: 24px;
+               border-radius: 50%;
+               object-fit: cover;
+              }
+              button{
+               background-color: #5d5b8d;
+               color: #ddddf7;
+               cursor: pointer;
+               font-size: 10px;
+               border: none;
+              }
              }
+
+             .search{
+               border: 1px solid gray;
+               .searchForm{
+                    padding: 10px;
+                  input{
+                     border: none;
+                     color: white;
+                     outline: none;
+                     background-color: transparent;
+                     width: -webkit-fill-available;
+
+                     &::placeholder{
+                        color: lightgray;
+                     }
+                  }
+               }
+               
+             }
+             .userChat{
+               padding: 10px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: white;
+                &:hover{
+                  background-color: #2f2d52;
+                }
+
+               img{
+                  width: 30%;
+                  height: 30%;
+                  border-radius: 50%;
+                  object-fit: cover;
+               }
+               .userChatInfo{
+
+                  span{
+                      font-size: 18px;
+                      font-weight: 500;
+                  }
+                  p{
+                    font-size: 14px;
+                    color: lightgray;
+                  }
+               }
+            }
+
         }
         .chat{
            flex: 2;
+           .chaticon{
+            display: flex;
+            align-items: center;
+            float: right;
+           }
            
         }
     }
