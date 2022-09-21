@@ -1,37 +1,45 @@
+import { doc, onSnapshot } from 'firebase/firestore';
 import React from 'react'
-import Avatar from '../img/avatar_icon.jpg'
+import { useState,useEffect,useContext } from 'react';
+import { AuthContext } from '../context/authContext'
+import { ChatContext } from '../context/chatContext';
+import { db } from '../Pages/Firebase';
 function Chats() {
+  const {currentUser}=useContext(AuthContext);
+  const {dispatch}=useContext(ChatContext);
+  const [chats,setChats]=useState([]);
+
+  useEffect(()=>{
+    const getChats=()=>{
+      const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
+        setChats(doc.data())
+    });
+    return()=>{
+      unsub()
+    };
+    };
+   currentUser.uid && getChats();
+},[currentUser.uid]);
+
+
+const handleSelect=(user)=>{
+ dispatch({type:"CHANGE_USER",payload:user})
+}
+
+console.log(chats)
     return (
         <div className='chats'>
-          <div className='userChat'>
-             <img src={Avatar} alt=''/>
+          {Object.entries(chats)?.map((chat) => (
+         
+          <div className='userChat' key={chat[0]} onClick={()=>handleSelect(chat[1].userInfo)}>
+             <img src={chat[1].userInfo.photoURL} alt=''/>
              <div className='userChatInfo'>
-              <span>Sumit</span>
-              <p>Dummy Text</p>
+              <span>{chat[1].userInfo.displayName}</span>
+              <p>{chat[1].userInfo.lastmessage?.text}</p>
              </div>
-           </div>
-           <div className='userChat'>
-             <img src={Avatar} alt=''/>
-             <div className='userChatInfo'>
-              <span>Sumit</span>
-              <p>Dummy Text</p>
-             </div>
-           </div>
-           <div className='userChat'>
-             <img src={Avatar} alt=''/>
-             <div className='userChatInfo'>
-              <span>Sumit</span>
-              <p>Dummy Text</p>
-             </div>
-           </div>
-           <div className='userChat'>
-             <img src={Avatar} alt=''/>
-             <div className='userChatInfo'>
-              <span>Sumit</span>
-              <p>Dummy Text</p>
-             </div>
-           </div>
-           </div>
+           </div> 
+           ))}
+          </div>
            
        
       )
