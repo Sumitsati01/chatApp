@@ -99,6 +99,10 @@
         height: 80%;
         display: flex;
         overflow: hidden;
+        .chats{
+         height: calc(100% - 100px);
+         overflow-y: scroll;
+        }
         .sidebar{
              flex: 1;
              border-right: 1px solid white;
