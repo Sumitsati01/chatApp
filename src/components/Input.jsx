@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import Upload from '../img/upload-image-2.webp'
 import Attach from '../img/attach.png'
-import { arrayUnion, doc, Timestamp, updateDoc } from 'firebase/firestore';
+import { arrayUnion, doc, serverTimestamp, Timestamp, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../Pages/Firebase';
 import { v4 as uuid } from 'uuid';
 import { AuthContext } from '../context/authContext';
@@ -20,11 +20,13 @@ function Input() {
     if(img){
       const storageRef = ref(storage,uuid());
       const uploadTask=await uploadBytesResumable(storageRef, img);
+      //console.log(uploadTask)
       uploadTask.on(
         (error) => {
           
         },
         () => {
+         // console.log(text);
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
             await updateDoc(doc(db, "chats", data.chatId), {
               messages: arrayUnion({
@@ -49,7 +51,25 @@ function Input() {
         })
       })
     }
+  await updateDoc(doc(db,'userChats',currentUser.uid),{
+    [data.chatId + ".lastMessage"]: {
+      text,
+    },
+    [data.chatId + ".date"]: serverTimestamp(),
   }
+  );
+  await updateDoc(doc(db,'userChats',data.user.uid),{
+    [data.chatId + ".lastMessage"]: {
+      text,
+    },
+    [data.chatId + ".date"]: serverTimestamp(),
+  }
+  );
+
+  setText("");
+  setImg(null);
+  
+  };
 
   return (
     <div className='input'>
