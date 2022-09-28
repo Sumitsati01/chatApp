@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import Upload from '../img/upload-image-2.webp'
 import Attach from '../img/attach.png'
-import { arrayUnion, doc, serverTimestamp, Timestamp, updateDoc } from 'firebase/firestore';
+import { addDoc, arrayUnion, doc, serverTimestamp, Timestamp, updateDoc } from 'firebase/firestore';
 import { db, storage } from '../Pages/Firebase';
 import { v4 as uuid } from 'uuid';
 import { AuthContext } from '../context/authContext';
@@ -15,7 +15,6 @@ function Input() {
   const {currentUser} =useContext(AuthContext)
   const {data}=useContext(ChatContext);
 
-
   const handleSend= async ()=>{
     if(img){
       const storageRef = ref(storage,uuid());
@@ -23,12 +22,12 @@ function Input() {
       //console.log(uploadTask)
       uploadTask.on(
         (error) => {
-          
+
         },
         () => {
-         // console.log(text);
+          
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            await updateDoc(doc(db, "chats", data.chatId), {
+            await updateDoc(doc(db, "chats", data.chatID), {
               messages: arrayUnion({
                 id: uuid(),
                 text,
@@ -51,24 +50,26 @@ function Input() {
         })
       })
     }
+
   await updateDoc(doc(db,'userChats',currentUser.uid),{
-    [data.chatId + ".lastMessage"]: {
+    [data.chatID + ".lastMessage"]: {
       text,
     },
-    [data.chatId + ".date"]: serverTimestamp(),
+    [data.chatID + ".date"]: serverTimestamp(),
   }
   );
   await updateDoc(doc(db,'userChats',data.user.uid),{
-    [data.chatId + ".lastMessage"]: {
+    [data.chatID + ".lastMessage"]: {
       text,
     },
-    [data.chatId + ".date"]: serverTimestamp(),
+    [data.chatID + ".date"]: serverTimestamp(),
   }
   );
 
+
+
   setText("");
   setImg(null);
-  
   };
 
   return (
