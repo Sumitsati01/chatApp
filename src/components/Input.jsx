@@ -19,37 +19,36 @@ function Input() {
     if(img){
       const storageRef = ref(storage,uuid());
       const uploadTask= await uploadBytesResumable(storageRef, img);
-     
-      uploadTask.on(
-      (error) => {
+    // console.log(uploadTask)
+      uploadTask.on('state_changed', 
+          (error) => {
 
-      },
-        () => {
-          getDownloadURL(uploadTask.ref).then(async (downloadURL) => {
-            await updateDoc(doc(db, "chats", data.chatID), {
-              messages: arrayUnion({
-                id: uuid(),
-                text,
-                senderId: currentUser.uid,
-                date: Timestamp.now(),
-                img: downloadURL,
-              }),
-            });
-          });
-        }
-        
+          },
+          () => {
+              getDownloadURL(uploadTask.ref).then(async (downloadURL) => {
+                await updateDoc(doc(db, "chats", data.chatID), {
+                  messages: arrayUnion({
+                    id: uuid(),
+                    text,
+                    senderId: currentUser.uid,
+                    date: Timestamp.now(),
+                    img: downloadURL,
+                  }),
+                });
+              });
+          }
       );
 
     }else{
-      await updateDoc(doc(db,'chats',data.chatID),{
-        messages:arrayUnion({
-          id:uuid(),
-          text,
-          senderID:currentUser.uid,
-          Date:Timestamp.now()
+        await updateDoc(doc(db,'chats',data.chatID),{
+          messages:arrayUnion({
+            id:uuid(),
+            text,
+            senderID:currentUser.uid,
+            Date:Timestamp.now()
+          })
         })
-      })
-    }
+      }
 
   await updateDoc(doc(db,'userChats',currentUser.uid),{
     [data.chatID + ".lastMessage"]: {
