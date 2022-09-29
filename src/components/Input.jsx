@@ -14,19 +14,18 @@ function Input() {
 
   const {currentUser} =useContext(AuthContext)
   const {data}=useContext(ChatContext);
-
+ 
   const handleSend= async ()=>{
     if(img){
       const storageRef = ref(storage,uuid());
-      const uploadTask=await uploadBytesResumable(storageRef, img);
-      //console.log(uploadTask)
+      const uploadTask= await uploadBytesResumable(storageRef, img);
+     
       uploadTask.on(
-        (error) => {
+      (error) => {
 
-        },
+      },
         () => {
-          
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          getDownloadURL(uploadTask.ref).then(async (downloadURL) => {
             await updateDoc(doc(db, "chats", data.chatID), {
               messages: arrayUnion({
                 id: uuid(),
@@ -38,6 +37,7 @@ function Input() {
             });
           });
         }
+        
       );
 
     }else{
