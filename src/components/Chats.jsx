@@ -17,6 +17,7 @@ function Chats() {
           if (chat[0] !== 'undefined') {
             chatt.push(chat);
           }
+          return 1;
         })
         setChats([...chatt])
       });
