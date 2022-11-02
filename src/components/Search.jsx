@@ -10,8 +10,10 @@ function Search() {
   const [userName,setUserName]=useState("")
   const [user,setUser]=useState(null)
   const [err,setErr]=useState(false)
+  //console.log(userName);
   const handleSearch = async () => {
     const q = query(collection(db, "users"),where("displayName", "==", userName));
+    console.log(q);
     try {
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((doc) => {
